@@ -1,19 +1,8 @@
-# Vehicle Detection
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+## README
 
-
-In this project, your goal is to write a software pipeline to detect vehicles in a video (start with the test_video.mp4 and later implement on full project_video.mp4), but the main output or product we want you to create is a detailed writeup of the project.  Check out the [writeup template](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup.  
-
-Creating a great writeup:
 ---
-A great writeup should include the rubric points as well as your description of how you addressed each point.  You should include a detailed description of the code used in each step (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
 
-All that said, please be concise!  We're not looking for you to write a book here, just a brief description of how you passed each rubric point, and references to the relevant code :). 
-
-You can submit your writeup in markdown or use another method and submit a pdf instead.
-
-The Project
----
+**Vehicle Detection Project**
 
 The goals / steps of this project are the following:
 
@@ -24,14 +13,94 @@ The goals / steps of this project are the following:
 * Run your pipeline on a video stream (start with the test_video.mp4 and later implement on full project_video.mp4) and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
 * Estimate a bounding box for vehicles detected.
 
-Here are links to the labeled data for [vehicle](https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/vehicles.zip) and [non-vehicle](https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/non-vehicles.zip) examples to train your classifier.  These example images come from a combination of the [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html), the [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/), and examples extracted from the project video itself.   You are welcome and encouraged to take advantage of the recently released [Udacity labeled dataset](https://github.com/udacity/self-driving-car/tree/master/annotations) to augment your training data.  
+---
+### Writeup / README
 
-Some example images for testing your pipeline on single frames are located in the `test_images` folder.  To help the reviewer examine your work, please save examples of the output from each stage of your pipeline in the folder called `ouput_images`, and include them in your writeup for the project by describing what each image shows.    The video called `project_video.mp4` is the video your pipeline should work well on.  
+### Histogram of Oriented Gradients (HOG)
 
-**As an optional challenge** Once you have a working pipeline for vehicle detection, add in your lane-finding algorithm from the last project to do simultaneous lane-finding and vehicle detection!
+#### 1. Explain how  you extracted HOG features from the training images.
 
-**If you're feeling ambitious** (also totally optional though), don't stop there!  We encourage you to go out and take video of your own, and show us how you would implement this project on a new video!
+I read in the test imagery to explore sci-kit's hog api. Initially I ran hog on the entire image.
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+![][output_images/full_hog.png]
+
+I explored color ranges and initially built the pipeline using only grayscale values in hog from RGB. While this showed 93% accuracy
+in the test set, I found the acutal project video to perform poorly. I then switched to YCrCb colorspace and performed hog on each channel.
+
+I stuck with `orientations=9` and `cells_per_block=(2, 2)` but adjusted `pixels_per_cell=(8, 8)` as I scaled my windows.
+
+
+#### 2. Explain how you settled on your final choice of HOG parameters.
+
+I tried various combinations and settled on those which gave me high accuracy. My first run through the pipeline with simply grayscale from
+RGB offered 93% accuracy on the test set. Using the YCrCb colorspace and hog features on each channel individually, I reached 95% accuracy.
+
+#### 3. Training
+
+I trained the Linear SVM classifier by flattening the features of the YCrCb channel hogs . 
+
+### Sliding Window Search
+
+#### 1. Describe how you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+
+I chose three windows that were large enough to either capture subparts of a car or focus on far cars. I also chose the sizes to be divisible by 8 in order to maintain the number of hog cells. I did a 50% overlap as it offered acceptable results.
+
+![][output_images/grid.png]
+
+#### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+
+I searched three scales in order to capture vehicles of various sizes. As well, I found prediction time to be fairly slow so I buffered the sliding windows to only scan the road area. I still had spurious false positives so I tuned the thresholding of the heatmap to increase accuracy.
+
+![][output_images/heatmap.png]
+![][output_images/thresh.png]
+![][output_images/bbox.png]
+---
+
+### Video Implementation
+
+#### 1. Here's a [link to my video result](./project_video_solved.avi)
+
+
+#### 2. Describe how you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+
+I recorded the heatmaps of the past 6 frames and stacked them for before thresholding the values for prediction. 
+
+Here's an example result showing the heatmap from a series of frames of video:
+
+### Here are six frames and their corresponding heatmaps:
+
+![1][output_images/frame_1.png]
+![1][output_images/heat_1.png]
+
+![2][output_images/frame_2.png]
+![2][output_images/heat_2.png]
+
+![3][output_images/frame_3.png]
+![3][output_images/heat_3.png]
+
+![4][output_images/frame_4.png]
+![4][output_images/heat_4.png]
+
+![5][output_images/frame_5.png]
+![5][output_images/heat_5.png]
+
+![6][output_images/frame_6.png]
+![6][output_images/heat_6.png]
+
+### Here is the output of the integrated heatmap from all six frames:
+![combined heat][output_images/heat_combined.png]
+![threshold heat][output_images/heat_thresh.png]
+
+### Here the resulting bounding boxes are drawn onto the last frame in the series:
+![bounding][output_images/bbox_6.png]
+
+
+
+---
+
+### Discussion
+
+#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+
+I noticed that there's heat on the lane lines which is odd. Likely having more data to train the SVM would improve results. As well, the scales that I search for are pretty hardcoded. Both of these would be solved by using a CNN to generate prediction zones and bounding boxes.
 
