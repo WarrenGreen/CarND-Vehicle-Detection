@@ -22,7 +22,7 @@ The goals / steps of this project are the following:
 
 I read in the test imagery to explore sci-kit's hog api. Initially I ran hog on the entire image.
 
-![][output_images/full_hog.png]
+![](output_images/full_hog.png)
 
 I explored color ranges and initially built the pipeline using only grayscale values in hog from RGB. While this showed 93% accuracy
 in the test set, I found the acutal project video to perform poorly. I then switched to YCrCb colorspace and performed hog on each channel.
