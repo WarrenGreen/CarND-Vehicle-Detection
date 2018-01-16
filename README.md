@@ -43,7 +43,7 @@ I trained the Linear SVM classifier by flattening the features of the YCrCb chan
 
 #### 1. Describe how you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows? In [4]
 
-I chose three windows that were large enough to either capture subparts of a car or focus on far cars. I also chose the sizes to be divisible by 8 in order to maintain the number of hog cells. I did a 50% overlap as it offered acceptable results.
+I chose four windows that were large enough to either capture subparts of a car or focus on far cars. I also chose the sizes to be divisible by 8 in order to maintain the number of hog cells. I did a 50% overlap as it offered acceptable results.
 
 ![](output_images/grid.png)
 
