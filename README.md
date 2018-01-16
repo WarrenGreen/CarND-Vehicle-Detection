@@ -45,15 +45,15 @@ I trained the Linear SVM classifier by flattening the features of the YCrCb chan
 
 I chose three windows that were large enough to either capture subparts of a car or focus on far cars. I also chose the sizes to be divisible by 8 in order to maintain the number of hog cells. I did a 50% overlap as it offered acceptable results.
 
-![][output_images/grid.png]
+![](output_images/grid.png)
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
 I searched three scales in order to capture vehicles of various sizes. As well, I found prediction time to be fairly slow so I buffered the sliding windows to only scan the road area. I still had spurious false positives so I tuned the thresholding of the heatmap to increase accuracy.
 
-![][output_images/heatmap.png]
-![][output_images/thresh.png]
-![][output_images/bbox.png]
+![](output_images/heatmap.png)
+![](output_images/thresh.png)
+![](output_images/bbox.png)
 ---
 
 ### Video Implementation
@@ -69,30 +69,30 @@ Here's an example result showing the heatmap from a series of frames of video:
 
 ### Here are six frames and their corresponding heatmaps:
 
-![1][output_images/frame_1.png]
-![1][output_images/heat_1.png]
+![1](output_images/frame_1.png)
+![1](output_images/heat_1.png)
 
-![2][output_images/frame_2.png]
-![2][output_images/heat_2.png]
+![2](output_images/frame_2.png)
+![2](output_images/heat_2.png)
 
-![3][output_images/frame_3.png]
-![3][output_images/heat_3.png]
+![3](output_images/frame_3.png)
+![3](output_images/heat_3.png)
 
-![4][output_images/frame_4.png]
-![4][output_images/heat_4.png]
+![4](output_images/frame_4.png)
+![4](output_images/heat_4.png)
 
-![5][output_images/frame_5.png]
-![5][output_images/heat_5.png]
+![5](output_images/frame_5.png)
+![5](output_images/heat_5.png)
 
-![6][output_images/frame_6.png]
-![6][output_images/heat_6.png]
+![6](output_images/frame_6.png)
+![6](output_images/heat_6.png)
 
 ### Here is the output of the integrated heatmap from all six frames:
-![combined heat][output_images/heat_combined.png]
-![threshold heat][output_images/heat_thresh.png]
+![combined heat](output_images/heat_combined.png)
+![threshold heat](output_images/heat_thresh.png)
 
 ### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![bounding][output_images/bbox_6.png]
+![bounding](output_images/bbox_6.png)
 
 
 
