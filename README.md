@@ -18,7 +18,7 @@ The goals / steps of this project are the following:
 
 ### Histogram of Oriented Gradients (HOG)
 
-#### 1. Explain how  you extracted HOG features from the training images.
+#### 1. Explain how  you extracted HOG features from the training images. In [2]
 
 I read in the test imagery to explore sci-kit's hog api. Initially I ran hog on the entire image.
 
@@ -30,18 +30,18 @@ in the test set, I found the acutal project video to perform poorly. I then swit
 I stuck with `orientations=9` and `cells_per_block=(2, 2)` but adjusted `pixels_per_cell=(8, 8)` as I scaled my windows.
 
 
-#### 2. Explain how you settled on your final choice of HOG parameters.
+#### 2. Explain how you settled on your final choice of HOG parameters. In [2]
 
 I tried various combinations and settled on those which gave me high accuracy. My first run through the pipeline with simply grayscale from
 RGB offered 93% accuracy on the test set. Using the YCrCb colorspace and hog features on each channel individually, I reached 95% accuracy.
 
-#### 3. Training
+#### 3. Training In [148]
 
 I trained the Linear SVM classifier by flattening the features of the YCrCb channel hogs . 
 
 ### Sliding Window Search
 
-#### 1. Describe how you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+#### 1. Describe how you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows? In [4]
 
 I chose three windows that were large enough to either capture subparts of a car or focus on far cars. I also chose the sizes to be divisible by 8 in order to maintain the number of hog cells. I did a 50% overlap as it offered acceptable results.
 
@@ -61,7 +61,7 @@ I searched three scales in order to capture vehicles of various sizes. As well, 
 #### 1. Here's a [link to my video result](./project_video_solved.avi)
 
 
-#### 2. Describe how you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+#### 2. Describe how you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes. In [208]
 
 I recorded the heatmaps of the past 6 frames and stacked them for before thresholding the values for prediction. 
 
